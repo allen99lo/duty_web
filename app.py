@@ -81,29 +81,19 @@ def parse_duty_csv(file_path):
     # 解析月份 (從標題提取年月)
     import re
     year_month = ""
-    if "2026" in title and "09" in title:
-        year_month = "2026-09"
-    else:
-        # 嘗試從標題提取
-        import re
-        m = re.search(r'(\d{4})/(\d{2})', title)
-        if m:
-            year_month = f"{m.group(1)}-{m.group(2)}"
     m = re.search(r'(\d{4})/(\d{2})', title)
     if m:
-    year_month = f"{m.group(1)}-{m.group(2)}"
+        year_month = f"{m.group(1)}-{m.group(2)}"
 
-    # 解析每日排班 (row 4 ~ row 33, 共30天)
+    # 解析每日排班 (row 4 起，直到遇到空日期或員工統計表為止)
     days = []
     for i in range(4, len(rows)):
-        if i >= len(rows):
-            break
         row = rows[i]
         day_num = row[0].strip() if row[0].strip() else ""
         weekday = row[1].strip() if len(row) > 1 and row[1].strip() else ""
 
-        if not day_num:
-            continue
+        if not day_num or not day_num.isdigit():
+            break
 
         # 解析每個班別的人員
         shifts = {}
