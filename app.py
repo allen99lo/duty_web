@@ -79,6 +79,7 @@ def parse_duty_csv(file_path):
     title = rows[0][0] if rows else ""
 
     # 解析月份 (從標題提取年月)
+    import re
     year_month = ""
     if "2026" in title and "09" in title:
         year_month = "2026-09"
@@ -88,10 +89,13 @@ def parse_duty_csv(file_path):
         m = re.search(r'(\d{4})/(\d{2})', title)
         if m:
             year_month = f"{m.group(1)}-{m.group(2)}"
+    m = re.search(r'(\d{4})/(\d{2})', title)
+    if m:
+    year_month = f"{m.group(1)}-{m.group(2)}"
 
     # 解析每日排班 (row 4 ~ row 33, 共30天)
     days = []
-    for i in range(4, 34):
+    for i in range(4, len(rows)):
         if i >= len(rows):
             break
         row = rows[i]
