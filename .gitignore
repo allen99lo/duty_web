@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+data/
+test_*.py
+test_*.js
+test_*.html
+*.bat

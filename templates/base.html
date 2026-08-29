@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}排班表系統{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">桃園裝修區臺 排班表系統</div>
+        <div class="nav-links">
+            <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">首頁</a>
+            <a href="/calendar" class="nav-link {% if request.path == '/calendar' %}active{% endif %}">月曆視圖</a>
+            <a href="/employee" class="nav-link {% if request.path == '/employee' %}active{% endif %}">員工排班</a>
+            <a href="/stats" class="nav-link {% if request.path == '/stats' %}active{% endif %}">統計報表</a>
+            <a href="/upload" class="nav-link {% if request.path == '/upload' %}active{% endif %}">匯入CSV</a>
+        </div>
+        <div class="nav-file-select">
+            <label>班表檔案：</label>
+            <select id="fileSelect" onchange="onFileChange(this.value)">
+                {% for f in csv_files %}
+                <option value="{{ f }}">{{ f }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </nav>
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="footer">
+        <p>桃園裝修區臺 排班表系統 &copy; 2026</p>
+    </footer>
+    <script src="{{ url_for('static', filename='base.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
