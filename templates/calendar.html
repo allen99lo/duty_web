@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block title %}月曆視圖{% endblock %}
 {% block content %}
-<div class="card">
+<div class="card calendar-card">
     <h1 class="card-title">月曆視圖</h1>
     <div class="legend" id="legend"></div>
-    <div class="calendar-grid" id="calendarGrid"></div>
+    <div class="scroll-hint">← 左右滑動查看完整月曆 →</div>
+    <div class="calendar-scroll">
+        <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
 </div>
 
 <!-- Day Detail Modal -->

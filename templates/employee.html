@@ -6,7 +6,7 @@
     <h1 class="card-title">員工排班查詢</h1>
     <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
         <label>選擇員工：</label>
-        <select id="empSelect" onchange="selectEmployee(this.value)" style="padding:6px 12px;border-radius:4px;font-size:14px;min-width:200px">
+        <select id="empSelect" onchange="selectEmployee(this.value)" style="padding:8px 12px;border-radius:4px;font-size:14px;min-width:0;max-width:100%;flex:1;min-width:180px">
             <option value="">-- 請選擇 --</option>
         </select>
         <span id="empInfo" style="color:var(--text-secondary);font-size:14px"></span>
@@ -27,17 +27,22 @@
 
     <div class="card">
         <h2 class="card-title">本月排班曆</h2>
-        <div class="calendar-grid" id="empCalendar"></div>
+        <div class="scroll-hint">← 左右滑動查看完整月曆 →</div>
+        <div class="calendar-scroll">
+            <div class="calendar-grid" id="empCalendar"></div>
+        </div>
     </div>
 
     <div class="card">
         <h2 class="card-title">排班明細</h2>
-        <table class="shift-table" id="detailTable">
-            <thead><tr>
-                <th>日期</th><th>星期</th><th>班別</th><th>時間</th><th>位置</th>
-            </tr></thead>
-            <tbody id="detailBody"></tbody>
-        </table>
+        <div class="table-scroll">
+            <table class="shift-table" id="detailTable">
+                <thead><tr>
+                    <th>日期</th><th>星期</th><th>班別</th><th>時間</th><th>位置</th>
+                </tr></thead>
+                <tbody id="detailBody"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 

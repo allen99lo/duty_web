@@ -27,6 +27,10 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html, body {
+    overflow-x: hidden;
+}
+
 body {
     font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
     background: var(--bg);
@@ -101,6 +105,7 @@ body {
     padding: 24px;
     margin-bottom: 24px;
     overflow: visible;
+    min-width: 0;
 }
 .card-title {
     font-size: 20px;
@@ -112,11 +117,18 @@ body {
 }
 
 /* ---- Calendar Grid ---- */
+.calendar-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -4px;
+    padding: 0 4px 4px;
+}
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 8px;
     align-items: stretch;
+    min-width: 0;
 }
 .calendar-header {
     background: var(--primary);
@@ -511,12 +523,242 @@ body {
     color: var(--text-secondary);
 }
 
+/* ---- Footer ---- */
+.footer {
+    background: var(--primary);
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+    padding: 16px;
+    font-size: 13px;
+    margin-top: auto;
+}
+
+/* ---- Table Scroll Wrapper ---- */
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+.table-scroll .shift-table {
+    display: table;
+    min-width: 480px;
+}
+
+/* ---- Scroll Hint ---- */
+.scroll-hint {
+    display: none;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
-    .navbar { flex-wrap: wrap; height: auto; padding: 8px 16px; }
-    .nav-links { order: 3; width: 100%; justify-content: center; }
-    .nav-file-select { order: 2; }
-    .calendar-day { min-height: 180px; }
-    .stat-row { flex-direction: column; }
-    .emp-grid { grid-template-columns: 1fr; }
+    .scroll-hint { display: block; }
+    .container {
+        padding: 12px;
+    }
+    .card {
+        padding: 14px;
+        margin-bottom: 16px;
+    }
+    .card-title {
+        font-size: 17px;
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+    }
+
+    .navbar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 8px 12px;
+        gap: 8px;
+    }
+    .nav-brand {
+        font-size: 15px;
+        width: 100%;
+        text-align: center;
+    }
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2px;
+    }
+    .nav-link {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    .nav-file-select {
+        order: 2;
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        font-size: 13px;
+    }
+    .nav-file-select select {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .legend {
+        gap: 8px;
+        margin-bottom: 12px;
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    .legend-item {
+        font-size: 12px;
+        gap: 4px;
+    }
+    .legend-color {
+        width: 12px;
+        height: 12px;
+    }
+
+    /* 手機：月曆維持最小寬度，左右滑動閱讀 */
+    .calendar-scroll {
+        margin: 0 -14px;
+        padding: 0 14px 6px;
+    }
+    .calendar-grid {
+        min-width: 720px;
+        gap: 6px;
+    }
+    .calendar-header {
+        padding: 6px 4px;
+        font-size: 13px;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    .calendar-day {
+        min-height: 200px;
+        padding: 6px;
+        border-radius: 4px;
+    }
+    .calendar-day .day-num {
+        font-size: 14px;
+        padding: 2px;
+    }
+    .shift-name-line {
+        font-size: 12px;
+        line-height: 1.55;
+        gap: 4px;
+    }
+    .shift-names {
+        font-size: 12px;
+        line-height: 1.55;
+    }
+    .shift-name-line .shift-badge {
+        font-size: 11px !important;
+        padding: 1px 5px;
+        min-width: 40px;
+    }
+
+    .stat-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .stat-box {
+        padding: 14px 8px;
+        flex: none;
+    }
+    .stat-box .stat-value {
+        font-size: 26px;
+    }
+    .stat-box .stat-label {
+        font-size: 12px;
+    }
+    .emp-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* 表格由 .table-scroll 負責水平滑動，表格本身維持 table */
+    .table-scroll .shift-table {
+        min-width: 520px;
+        font-size: 13px;
+    }
+    .table-scroll .shift-table th,
+    .table-scroll .shift-table td {
+        padding: 6px 4px;
+        white-space: nowrap;
+    }
+
+    .modal {
+        width: 96%;
+        max-height: 90vh;
+    }
+    .modal-header {
+        padding: 12px 14px;
+    }
+    .modal-header h2 {
+        font-size: 16px;
+    }
+    .modal-body {
+        padding: 14px;
+    }
+
+    .emp-detail-header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .emp-detail-code {
+        font-size: 36px;
+    }
+    .emp-detail-name {
+        font-size: 20px;
+    }
+
+    .upload-area {
+        padding: 32px 16px;
+    }
+    .upload-icon {
+        font-size: 36px;
+    }
+
+    .empty-state {
+        padding: 32px 16px;
+    }
+
+    .modal-body {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    footer.footer {
+        padding: 12px;
+        font-size: 12px;
+    }
+
+    select, input, button {
+        max-width: 100%;
+        font-size: 14px;
+    }
+    .emp-detail-info {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-grid {
+        min-width: 680px;
+    }
+    .nav-link {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    .stat-box .stat-value {
+        font-size: 22px;
+    }
+    .modal {
+        width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+    .modal-overlay {
+        align-items: flex-end;
+    }
 }
