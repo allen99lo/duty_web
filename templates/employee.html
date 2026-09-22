@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}員工排班{% endblock %}
+{% block head %}{% endblock %}
+{% block content %}
+<div class="card">
+    <h1 class="card-title">員工排班查詢</h1>
+    <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+        <label>選擇員工：</label>
+        <select id="empSelect" onchange="selectEmployee(this.value)" style="padding:6px 12px;border-radius:4px;font-size:14px;min-width:200px">
+            <option value="">-- 請選擇 --</option>
+        </select>
+        <span id="empInfo" style="color:var(--text-secondary);font-size:14px"></span>
+    </div>
+</div>
+
+<div id="empDetail" style="display:none">
+    <div class="card">
+        <div class="emp-detail-header">
+            <div class="emp-detail-code" id="detailCode"></div>
+            <div>
+                <div class="emp-detail-name" id="detailName"></div>
+                <div class="emp-detail-info" id="detailInfo"></div>
+            </div>
+        </div>
+        <div class="stat-row" id="detailStats"></div>
+    </div>
+
+    <div class="card">
+        <h2 class="card-title">本月排班曆</h2>
+        <div class="calendar-grid" id="empCalendar"></div>
+    </div>
+
+    <div class="card">
+        <h2 class="card-title">排班明細</h2>
+        <table class="shift-table" id="detailTable">
+            <thead><tr>
+                <th>日期</th><th>星期</th><th>班別</th><th>時間</th><th>位置</th>
+            </tr></thead>
+            <tbody id="detailBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="empEmpty" class="card">
+    <div class="empty-state">
+        <h3>請選擇一位員工</h3>
+        <p>從上方下拉選單選擇員工，查看其排班資料</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='employee.js') }}"></script>
+{% endblock %}

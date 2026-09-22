@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}匯入CSV{% endblock %}
+{% block content %}
+<div class="card">
+    <h1 class="card-title">匯入排班 CSV 檔案</h1>
+    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📂</div>
+            <div class="upload-text">點擊選擇 CSV 檔案，或拖曳至此</div>
+            <div style="font-size:13px;color:#999;margin-top:8px">僅支援 .csv 格式（BIG5/UTF-8 編碼）</div>
+            <input type="file" name="csv_file" id="fileInput" accept=".csv" onchange="fileSelected(this)">
+        </div>
+        <div id="fileInfo" style="margin-top:12px;display:none">
+            <span style="font-weight:bold" id="fileName"></span>
+            <span style="color:var(--text-secondary);margin-left:8px" id="fileSize"></span>
+        </div>
+        <div style="margin-top:16px;text-align:center">
+            <button type="submit" id="submitBtn" disabled style="
+                padding:10px 32px;
+                background:var(--primary);
+                color:white;
+                border:none;
+                border-radius:4px;
+                font-size:16px;
+                cursor:pointer;
+            ">匯入</button>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h2 class="card-title">已匯入的班表</h2>
+    <table class="shift-table">
+        <thead><tr><th>檔案名稱</th><th>大小</th><th>操作</th></tr></thead>
+        <tbody>
+        {% for f in csv_files %}
+        <tr>
+            <td><strong>{{ f }}</strong></td>
+            <td>-</td>
+            <td>
+                <a href="/calendar" style="color:var(--primary)">查看月曆</a> |
+                <a href="/employee" style="color:var(--primary)">員工排班</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% if not csv_files %}
+        <tr><td colspan="3" style="color:#999;text-align:center">尚無班表檔案</td></tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2 class="card-title">CSV 格式說明</h2>
+    <div style="font-size:14px;color:var(--text-secondary);line-height:1.8">
+        <p>排班 CSV 檔案需符合以下格式：</p>
+        <ul style="margin-left:20px">
+            <li>第 1 列：標題列（如「桃園裝修區臺 2026/09月份」）</li>
+            <li>第 2 列：欄位標題（日期、星期、班別時間）</li>
+            <li>第 3 列：班別名稱（上班日-早、上班日-小、上班日-大、假日-早、假日-小、假日-大、強制補休）</li>
+            <li>第 4 列：班別代碼（S:08-17, A:08-17, ...）</li>
+            <li>第 5~34 列：每日排班資料（30天）</li>
+            <li>第 39~65 列：員工統計表（代碼、姓名、班次需求、工時）</li>
+        </ul>
+        <p style="margin-top:8px">編碼支援：BIG5、CP950、UTF-8</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+const submitBtn = document.getElementById('submitBtn');
+
+// Drag & Drop
+uploadArea.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+});
+uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        fileSelected(fileInput);
+    }
+});
+
+function fileSelected(input) {
+    if (input.files.length) {
+        const file = input.files[0];
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
+        document.getElementById('fileInfo').style.display = 'block';
+        submitBtn.disabled = false;
+    }
+}
+</script>
+{% endblock %}

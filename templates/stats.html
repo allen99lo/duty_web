@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}統計報表{% endblock %}
+{% block content %}
+<div class="card">
+    <h1 class="card-title">統計報表</h1>
+    <div class="stat-row" id="overviewStats">
+        <div class="stat-box"><div class="stat-value" id="sTotalDays">-</div><div class="stat-label">排班天數</div></div>
+        <div class="stat-box"><div class="stat-value" id="sTotalEmp">-</div><div class="stat-label">員工數</div></div>
+        <div class="stat-box"><div class="stat-value" id="sAvgHours">-</div><div class="stat-label">平均工時</div></div>
+        <div class="stat-box"><div class="stat-value" id="sMaxHours">-</div><div class="stat-label">最高工時</div></div>
+    </div>
+</div>
+
+<div class="card">
+    <h2 class="card-title">各班別每日人數分布</h2>
+    <div id="dailyChart" style="overflow-x:auto"></div>
+</div>
+
+<div class="card">
+    <h2 class="card-title">員工工時排行</h2>
+    <div id="hoursRanking"></div>
+</div>
+
+<div class="card">
+    <h2 class="card-title">各班別需求 vs 實際</h2>
+    <div id="shiftComparison"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='stats.js') }}"></script>
+{% endblock %}

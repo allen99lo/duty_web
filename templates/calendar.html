@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}月曆視圖{% endblock %}
+{% block content %}
+<div class="card">
+    <h1 class="card-title">月曆視圖</h1>
+    <div class="legend" id="legend"></div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+</div>
+
+<!-- Day Detail Modal -->
+<div class="modal-overlay" id="dayModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modalTitle">排班詳情</h2>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+</div>
+
+<div class="tooltip" id="tooltip" style="display:none;"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='calendar.js') }}"></script>
+{% endblock %}
