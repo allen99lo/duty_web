@@ -5,7 +5,7 @@ var SHIFT_INFO = {
     "\u5047\u65E5-\u65E9":   { color: "#FF9800", css: "hd", time: "08:00~16:00", label: "\u5047\u65E5\u65E9" },
     "\u5047\u65E5-\u5C0F":   { color: "#F44336", css: "he", time: "16:00~00:00", label: "\u5047\u65E5\u5C0F" },
     "\u5047\u65E5-\u5927":   { color: "#795548", css: "hn", time: "00:00~08:00", label: "\u5047\u65E5\u5927" },
-    "\u5F37\u88FD\u88DC\u4F11":  { color: "#607D8B", css: "comp", time: "08:30~16:30", label: "\u88DC\u4F11" }
+    "\u5F37\u5236\u88DC\u4F11":  { color: "#607D8B", css: "comp", time: "08:30~16:30", label: "\u88DC\u4F11" }
 };
 
 var scheduleData = null;
