@@ -18,7 +18,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "duty-schedule-dev-key")
 # CSV 解析模組
 # ============================================================
 
-# 員工代碼對照表 (從人員清單更新)
+# 員工代碼對照表（備援：CSV 無法取得姓名時使用）
 MEMBER_MAP = {
     "CA": "張日曜", "CN": "孫景泰", "CO": "秦桔萬",
     "CP": "邱冠霖", "CQ": "官郁庭", "CR": "方振彬", "CS": "陳信憲",
@@ -29,7 +29,7 @@ MEMBER_MAP = {
     "RO": "張哲維", "RS": "陳志偉", "SA": "范振宇",
     "TA": "黃經洲", "TC": "洪柜峰",
     "TD": "林宏儒", "TE": "呂明峯", "TF": "周育稔", "TG": "許世勳",
-    "TH": "羅應順",
+    "TH": "羅應順", "NF": "許敦智",
 }
 
 # 班別定義
@@ -72,86 +72,45 @@ def read_csv_file(file_path):
     raise ValueError(f"無法以任何已知編碼讀取 {file_path}")
 
 
-def parse_duty_csv(file_path):
-    """解析排班 CSV，回傳結構化資料"""
-    content = read_csv_file(file_path)
-    reader = csv.reader(io.StringIO(content))
-    rows = list(reader)
+def _is_valid_name(name):
+    """姓名須含中文字且無缺字標記"""
+    if not name or "?" in name or "？" in name:
+        return False
+    return any("\u4e00" <= ch <= "\u9fff" for ch in name)
 
-    # 解析標題
-    title = rows[0][0] if rows else ""
 
-    # 解析月份 (從標題提取年月)
-    import re
-    year_month = ""
-    if "2026" in title and "09" in title:
-        year_month = "2026-09"
-    else:
-        # 嘗試從標題提取
-        import re
-        m = re.search(r'(\d{4})/(\d{2})', title)
-        if m:
-            year_month = f"{m.group(1)}-{m.group(2)}"
-
-    # 解析每日排班 (row 4 ~ row 33, 共30天)
-    days = []
-    for i in range(4, len(rows)):
-        if i >= len(rows):
-            break
-        row = rows[i]
-        day_num = row[0].strip() if row and row[0].strip() else ""
-        weekday = row[1].strip() if len(row) > 1 and row[1].strip() else ""
-
-        if not day_num or not day_num.isdigit():
+def build_member_map(rows):
+    """掃描 CSV 員工統計區，動態建立 代碼→姓名 對照；無效時回退內建表"""
+    member_map = dict(MEMBER_MAP)
+    for row in rows:
+        if not row or len(row) < 2:
             continue
-        day_num = int(day_num)
-        if day_num < 1 or day_num > 31:
+        code = row[0].strip()
+        name = row[1].strip()
+        if not code or not name:
             continue
+        if not (code.isascii() and code.isalpha() and 2 <= len(code) <= 3):
+            continue
+        if name in ("員工姓名", "姓名"):
+            continue
+        if _is_valid_name(name):
+            member_map[code] = name
+    return member_map
 
-        # 解析每個班別的人員
-        shifts = {}
-        for group in SHIFT_GROUPS:
-            members = []
-            for col_idx in group["cols"]:
-                if col_idx < len(row):
-                    code = row[col_idx].strip()
-                    # 全形空白 or 空白 都視為空
-                    if code and code != "\u3000" and code != "":
-                        members.append({
-                            "code": code,
-                            "name": MEMBER_MAP.get(code, code),
-                            "position": POSITION_LABELS[group["cols"].index(col_idx)]
-                        })
-                    else:
-                        members.append(None)
-                else:
-                    members.append(None)
-            shifts[group["name"]] = members
 
-        # 判斷是否為假日
-        is_weekend = weekday in ["六", "日"]
-
-        days.append({
-            "day": day_num,
-            "weekday": weekday,
-            "weekday_num": WEEKDAY_NAMES.index(weekday) if weekday in WEEKDAY_NAMES else -1,
-            "is_weekend": is_weekend,
-            "shifts": shifts,
-        })
-
-    # 解析員工統計表 (row 39 ~ row 65)
+def parse_employee_rows(rows, member_map):
+    """掃描整份 CSV 的員工統計列（代碼在第 0 欄、姓名在第 1 欄）"""
     employees = []
-    for i in range(39, min(len(rows), 66)):
-        row = rows[i]
-        if not row:
+    for row in rows:
+        if not row or len(row) < 2:
             continue
-        code = row[0].strip() if row[0].strip() else ""
-        name = row[1].strip() if len(row) > 1 and row[1].strip() else ""
-
-        if not code or not code.isalpha() or len(code) > 3:
+        code = row[0].strip()
+        name = row[1].strip()
+        if not code or not (code.isascii() and code.isalpha() and 2 <= len(code) <= 3):
+            continue
+        if name in ("員工姓名", "姓名") or not name:
             continue
 
-        # 班次需求
         shift_req = {}
         shift_keys = ["上班日-早", "上班日-小", "上班日-大", "假日-早", "假日-小", "假日-大"]
         for j, key in enumerate(shift_keys):
@@ -161,10 +120,8 @@ def parse_duty_csv(file_path):
             except ValueError:
                 shift_req[key] = 0
 
-        # 工時
         total_hours = row[8].strip() if len(row) > 8 and row[8].strip() else "0"
         overtime_hours = row[10].strip() if len(row) > 10 and row[10].strip() else "0"
-
         try:
             total_hours = int(total_hours)
         except ValueError:
@@ -177,11 +134,76 @@ def parse_duty_csv(file_path):
         employees.append({
             "code": code,
             "name": name,
-            "full_name": MEMBER_MAP.get(code, name),
+            "full_name": member_map.get(code, name),
             "shift_requirements": shift_req,
             "total_hours": total_hours,
             "overtime_hours": overtime_hours,
         })
+    return employees
+
+
+def parse_duty_csv(file_path):
+    """解析排班 CSV，回傳結構化資料"""
+    content = read_csv_file(file_path)
+    reader = csv.reader(io.StringIO(content))
+    rows = list(reader)
+
+    # 解析標題
+    title = rows[0][0] if rows else ""
+
+    # 解析月份 (從標題提取年月)
+    import re
+    year_month = ""
+    m = re.search(r'(\d{4})/(\d{2})', title)
+    if m:
+        year_month = f"{m.group(1)}-{m.group(2)}"
+
+    # 動態從 CSV 建立代碼對照（優先 CSV，備援內建）
+    member_map = build_member_map(rows)
+
+    # 解析每日排班
+    days = []
+    for i in range(4, len(rows)):
+        row = rows[i]
+        day_num = row[0].strip() if row and row[0].strip() else ""
+        weekday = row[1].strip() if len(row) > 1 and row[1].strip() else ""
+
+        if not day_num or not day_num.isdigit():
+            continue
+        day_num = int(day_num)
+        if day_num < 1 or day_num > 31:
+            continue
+
+        shifts = {}
+        for group in SHIFT_GROUPS:
+            members = []
+            for col_idx in group["cols"]:
+                if col_idx < len(row):
+                    code = row[col_idx].strip()
+                    if code and code != "\u3000" and code != "":
+                        members.append({
+                            "code": code,
+                            "name": member_map.get(code, code),
+                            "position": POSITION_LABELS[group["cols"].index(col_idx)]
+                        })
+                    else:
+                        members.append(None)
+                else:
+                    members.append(None)
+            shifts[group["name"]] = members
+
+        is_weekend = weekday in ["六", "日"]
+
+        days.append({
+            "day": day_num,
+            "weekday": weekday,
+            "weekday_num": WEEKDAY_NAMES.index(weekday) if weekday in WEEKDAY_NAMES else -1,
+            "is_weekend": is_weekend,
+            "shifts": shifts,
+        })
+
+    # 員工統計表（動態掃描，不受固定列號限制）
+    employees = parse_employee_rows(rows, member_map)
 
     # 計算每位員工的實際排班統計
     emp_stats = defaultdict(lambda: {"code": "", "name": "", "shifts": defaultdict(int), "total": 0, "days": []})
@@ -208,7 +230,7 @@ def parse_duty_csv(file_path):
         "employee_stats": dict(emp_stats),
         "shift_groups": SHIFT_GROUPS,
         "shift_colors": SHIFT_COLORS,
-        "member_map": MEMBER_MAP,
+        "member_map": member_map,
     }
 
 
