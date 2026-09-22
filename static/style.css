@@ -86,7 +86,7 @@ body {
 
 /* ---- Container ---- */
 .container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 24px;
     flex: 1;
@@ -100,6 +100,7 @@ body {
     box-shadow: var(--shadow);
     padding: 24px;
     margin-bottom: 24px;
+    overflow: visible;
 }
 .card-title {
     font-size: 20px;
@@ -113,8 +114,9 @@ body {
 /* ---- Calendar Grid ---- */
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    align-items: stretch;
 }
 .calendar-header {
     background: var(--primary);
@@ -128,13 +130,14 @@ body {
 .calendar-day {
     background: white;
     border: 1px solid var(--border);
-    border-radius: 4px;
-    min-height: 180px;
+    border-radius: 6px;
+    min-height: 220px;
     padding: 8px;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
     flex-direction: column;
+    overflow: visible;
 }
 .calendar-day:hover {
     border-color: var(--primary);
@@ -184,29 +187,35 @@ body {
 .shifts-names {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
     margin-top: 4px;
     flex: 1;
+    min-width: 0;
 }
 .shift-name-line {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 4px;
-    font-size: 12px;
-    line-height: 1.4;
+    font-size: 11px;
+    line-height: 1.5;
+    flex-wrap: nowrap;
+    min-width: 0;
 }
 .shift-name-line .shift-badge {
     font-size: 10px !important;
     padding: 1px 4px;
     flex-shrink: 0;
+    margin-top: 1px;
+    min-width: 36px;
+    text-align: center;
 }
 .shift-names {
     color: var(--text);
-    font-size: 12px;
-    word-break: keep-all;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 11px;
+    line-height: 1.5;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
 }
 
 /* ---- Day Detail Modal ---- */
@@ -282,6 +291,9 @@ body {
     flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 16px;
+    padding: 8px 12px;
+    background: #FAFAFA;
+    border-radius: 6px;
 }
 .legend-item {
     display: flex;
@@ -504,7 +516,7 @@ body {
     .navbar { flex-wrap: wrap; height: auto; padding: 8px 16px; }
     .nav-links { order: 3; width: 100%; justify-content: center; }
     .nav-file-select { order: 2; }
-    .calendar-day { min-height: 140px; }
+    .calendar-day { min-height: 180px; }
     .stat-row { flex-direction: column; }
     .emp-grid { grid-template-columns: 1fr; }
 }
