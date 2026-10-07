@@ -8,13 +8,13 @@
 4,日,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,MB,TH,NI,CP,RA,TF,MB,TH,NI,CP,RA,TF,SA,CQ,NM,CO,RH,TC,　,　,　,　,　,　
 5,一,CA,TG,NM,CR,RS,TC,CA,TG,NM,CR,RS,TC,MB,TH,NI,CP,RA,TF,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,MB,TH,NI,CP,RA,TF
 6,二,NA,CN,NG,CS,RA,TF,NA,CN,NG,CS,RA,TF,CA,TG,NM,CR,RS,TC,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,CA,TG,NM,CR,RS,TC
-7,三,SA,TC,NI,CQ,RS,TE,SA,TC,NI,CQ,RS,TE,NA,CN,NG,CS,RA,TF,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,NA,CN,NG,CS,RA,TF
-8,四,TA,CO,NH,CR,RJ,TH,TA,CO,NH,CR,RJ,TH,SA,TC,NI,CQ,RS,TE,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,SA,TC,NI,CQ,RS,TE
+7,三,SA,TC,NI,CQ,RS,TG,SA,TC,NI,CQ,RS,TG,NA,CN,NG,CS,RA,TF,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,NA,CN,NG,CS,RA,TF
+8,四,TA,CO,NH,CR,RJ,TH,TA,CO,NH,CR,RJ,TH,SA,TC,NI,CQ,RS,TG,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,SA,TC,NI,CQ,RS,TG
 9,五,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,MA,NI,NA,CN,RA,TF,MA,NI,NA,CN,RA,TF,TA,CO,NH,CR,RJ,TH,　,　,　,　,　,　
 10,六,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,MB,CP,NH,CQ,RS,TG,MB,CP,NH,CQ,RS,TG,MA,NI,NA,CN,RA,TF,　,　,　,　,　,　
 11,日,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,CA,NN,NM,CS,RH,TC,CA,NN,NM,CS,RH,TC,MB,CP,NH,CQ,RS,TG,　,　,　,　,　,　
-12,一,SA,CO,NI,CN,RS,TE,SA,CO,NI,CN,RS,TE,CA,NN,NM,CS,RH,TC,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,CA,NN,NM,CS,RH,TC
-13,二,TA,NN,NG,CP,RA,TG,TA,NN,NG,CP,RA,TG,SA,CO,NI,CN,RS,TE,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,SA,CO,NI,CN,RS,TE
+12,一,SA,CO,NI,CN,RS,TD,SA,CO,NI,CN,RS,TD,CA,NN,NM,CS,RH,TC,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,CA,NN,NM,CS,RH,TC
+13,二,TA,NN,NG,CP,RA,TG,TA,NN,NG,CP,RA,TG,SA,CO,NI,CN,RS,TD,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,SA,CO,NI,CN,RS,TD
 14,三,SA,TH,NM,CQ,RH,TC,SA,TH,NM,CQ,RH,TC,TA,NN,NG,CP,RA,TG,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,TA,NN,NG,CP,RA,TG
 15,四,NA,CS,NH,CN,RJ,TF,NA,CS,NH,CN,RJ,TF,SA,TH,NM,CQ,RH,TC,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,SA,TH,NM,CQ,RH,TC
 16,五,MB,TE,NG,CQ,RS,TD,MB,TE,NG,CQ,RS,TD,NA,CS,NH,CN,RJ,TF,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,NA,CS,NH,CN,RJ,TF
@@ -28,10 +28,10 @@
 24,六,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,MA,TD,NM,CP,RS,TE,MA,TD,NM,CP,RS,TE,CA,TF,NG,CN,RJ,TA,　,　,　,　,　,　
 25,日,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,TA,CA,NG,CS,RH,TF,TA,CA,NG,CS,RH,TF,MA,TD,NM,CP,RS,TE,　,　,　,　,　,　
 26,一,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,SA,TG,NH,CQ,RJ,TD,SA,TG,NH,CQ,RJ,TD,TA,CA,NG,CS,RH,TF,　,　,　,　,　,　
-27,二,NA,CR,NI,CN,RA,TH,NA,CR,NI,CN,RA,TH,SA,TG,NH,CQ,RJ,TD,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,SA,TG,NH,CQ,RJ,TD
-28,三,MB,TF,NG,CO,RS,TG,MB,TF,NG,CO,RS,TG,NA,CR,NI,CN,RA,TH,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,NA,CR,NI,CN,RA,TH
-29,四,TA,CQ,NH,CP,RH,TD,TA,CQ,NH,CP,RH,TD,MB,TF,NG,CO,RS,TG,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,MB,TF,NG,CO,RS,TG
-30,五,CA,NG,NN,CN,RJ,TH,CA,NG,NN,CN,RJ,TH,TA,CQ,NH,CP,RH,TD,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,TA,CQ,NH,CP,RH,TD
+27,二,NA,TF,NI,CN,RA,TH,NA,TF,NI,CN,RA,TH,SA,TG,NH,CQ,RJ,TD,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,SA,TG,NH,CQ,RJ,TD
+28,三,MB,CR,NG,CO,RS,TG,MB,CR,NG,CO,RS,TG,NA,TF,NI,CN,RA,TH,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,NA,TF,NI,CN,RA,TH
+29,四,TA,CQ,NH,CP,RH,TE,TA,CQ,NH,CP,RH,TE,MB,CR,NG,CO,RS,TG,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,MB,CR,NG,CO,RS,TG
+30,五,CA,NG,NN,CN,RJ,TH,CA,NG,NN,CN,RJ,TH,TA,CQ,NH,CP,RH,TE,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,TA,CQ,NH,CP,RH,TE
 31,六,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,　,SA,TG,NI,CO,RA,TE,SA,TG,NI,CO,RA,TE,CA,NG,NN,CN,RJ,TH,　,　,　,　,　,　
 連班上限:24小時,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -62,8 +62,8 @@ SA,范振宇,4,4,5,3,3,1,88,0,88,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 TA,黃經洲,5,5,4,2,2,3,96,0,96,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 TC,洪柜峰,4,4,5,3,3,2,96,0,96,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 TD,林宏儒,5,5,4,2,2,3,96,0,96,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-TE,呂明?,5,5,5,2,2,2,88,0,88,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+TE,呂明?,4,4,4,2,2,2,80,0,80,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 TF,周育稔,4,4,4,3,3,3,104,0,104,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-TG,許世勳,4,4,5,3,3,1,88,0,88,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+TG,許世勳,5,5,6,3,3,1,96,0,96,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 TH,羅應順,5,5,5,2,2,3,96,0,96,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 製 表,,,,臺 長,,,,單位主管,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
