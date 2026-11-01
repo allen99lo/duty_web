@@ -404,6 +404,116 @@ body {
     margin-top: 4px;
 }
 
+/* ---- Stats File Picker (multi-select) ---- */
+.file-picker {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: #FAFAFA;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+.file-picker-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.file-picker-label {
+    font-size: 14px;
+    color: var(--text);
+}
+.file-picker-actions {
+    display: flex;
+    gap: 8px;
+}
+.btn {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text);
+    transition: all 0.2s;
+}
+.btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+.btn-primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: white;
+}
+.file-checklist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    max-height: 160px;
+    overflow-y: auto;
+    padding: 2px;
+}
+.file-check-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.file-check-item:hover {
+    border-color: var(--primary);
+}
+.file-check-item input {
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+.file-picker-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+/* ---- Chart Tabs (per-file daily distribution) ---- */
+.chart-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.chart-tab {
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: white;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text);
+    transition: all 0.2s;
+}
+.chart-tab:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.chart-tab.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    font-weight: bold;
+}
+
 /* ---- Bar Chart ---- */
 .bar-chart {
     display: flex;

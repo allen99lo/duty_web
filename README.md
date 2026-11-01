@@ -6,7 +6,7 @@ Web-based duty schedule viewer for 桃園裝修區臺 (GN0N00003) shift tables.
 
 - **月曆視圖** - 以月曆方式顯示每日排班，點擊日期查看詳情
 - **員工排班** - 依員工查詢個人排班曆與統計
-- **統計報表** - 班別人數分布、工時排行、需求vs實際達成率
+- **統計報表** - 可複選多個班表檔案合併統計：跨月份工時排行、班別需求vs實際達成率、各月份摘要與分布圖
 - **班別圖例** - 7種班別彩色標示
 
 ## 班別說明
@@ -57,7 +57,8 @@ web_duty/
 |------|------|
 | `GET /api/schedule/<filename>` | 取得完整排班資料 |
 | `GET /api/employee/<filename>/<code>` | 取得特定員工排班 |
-| `GET /api/stats/<filename>` | 取得統計資料 |
+| `GET /api/stats/<filename>` | 取得單一檔案統計資料 |
+| `GET /api/stats_multi?files=a.csv,b.csv` | 取得多檔合併統計資料 |
 
 ## 新增月份資料
 

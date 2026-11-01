@@ -313,18 +313,8 @@ def api_employee_detail(filename, code):
     })
 
 
-@app.route("/api/stats/<filename>")
-def api_stats(filename):
-    """API: 取得統計資料"""
-    file_path = os.path.join(DATA_DIR, filename)
-    if not os.path.exists(file_path):
-        return jsonify({"error": f"檔案不存在: {filename}"}), 404
-
-    try:
-        data = parse_duty_csv(file_path)
-    except Exception as e:
-        return jsonify({"error": f"CSV 解析失敗: {e}"}), 500
-
+def compute_file_stats(data):
+    """計算單一班表檔案的統計資料"""
     # 每日各班別人數
     daily_stats = []
     for day in data["days"]:
@@ -334,14 +324,166 @@ def api_stats(filename):
             stat["shifts"][group_name] = count
         daily_stats.append(stat)
 
+    # 每班別實際排班總人數
+    actual_by_shift = defaultdict(int)
+    for stat in daily_stats:
+        for group_name, count in stat["shifts"].items():
+            actual_by_shift[group_name] += count
+
+    # 每班別需求人數（員工統計表加總）
+    required_by_shift = defaultdict(int)
+    for e in data["employees"]:
+        for group_name, cnt in e["shift_requirements"].items():
+            required_by_shift[group_name] += cnt
+
     # 員工工時排行
     emp_ranking = sorted(data["employees"], key=lambda x: x["total_hours"], reverse=True)
 
-    return jsonify({
+    total_hours = sum(e["total_hours"] for e in data["employees"])
+    overtime_hours = sum(e["overtime_hours"] for e in data["employees"])
+    emp_count = len(data["employees"])
+
+    return {
         "daily_stats": daily_stats,
         "employee_ranking": emp_ranking,
         "total_days": len(data["days"]),
-        "total_employees": len(data["employees"]),
+        "total_employees": emp_count,
+        "total_hours": total_hours,
+        "overtime_hours": overtime_hours,
+        "avg_hours": round(total_hours / emp_count) if emp_count else 0,
+        "max_hours": max((e["total_hours"] for e in data["employees"]), default=0),
+        "actual_by_shift": dict(actual_by_shift),
+        "required_by_shift": dict(required_by_shift),
+    }
+
+
+@app.route("/api/stats/<filename>")
+def api_stats(filename):
+    """API: 取得單一檔案統計資料"""
+    file_path = os.path.join(DATA_DIR, filename)
+    if not os.path.exists(file_path):
+        return jsonify({"error": f"檔案不存在: {filename}"}), 404
+
+    try:
+        data = parse_duty_csv(file_path)
+    except Exception as e:
+        return jsonify({"error": f"CSV 解析失敗: {e}"}), 500
+
+    return jsonify(compute_file_stats(data))
+
+
+@app.route("/api/stats_multi")
+def api_stats_multi():
+    """API: 取得多個班表檔案的合併統計資料（files=檔1.csv,檔2.csv,...）"""
+    files_param = request.args.get("files", "")
+    filenames = [f.strip() for f in files_param.split(",") if f.strip()]
+    filenames = list(dict.fromkeys(filenames))  # 移除重複
+    if not filenames:
+        return jsonify({"error": "未選擇任何班表檔案"}), 400
+
+    files_out = []
+    errors = []
+    merged_emps = {}
+    merged_shift_required = defaultdict(int)
+    merged_shift_actual = defaultdict(int)
+
+    for fn in filenames:
+        file_path = os.path.join(DATA_DIR, fn)
+        if not os.path.exists(file_path):
+            errors.append(f"檔案不存在: {fn}")
+            continue
+        try:
+            data = parse_duty_csv(file_path)
+        except Exception as e:
+            errors.append(f"{fn} 解析失敗: {e}")
+            continue
+
+        stats = compute_file_stats(data)
+
+        # 合併員工統計（跨月份累加）
+        for e in data["employees"]:
+            agg = merged_emps.setdefault(e["code"], {
+                "code": e["code"],
+                "name": e["full_name"],
+                "total_hours": 0,
+                "overtime_hours": 0,
+                "actual_shifts": 0,
+                "shift_counts": defaultdict(int),
+                "months": [],
+            })
+            if e["full_name"]:
+                agg["name"] = e["full_name"]
+            agg["total_hours"] += e["total_hours"]
+            agg["overtime_hours"] += e["overtime_hours"]
+            emp_actual = data["employee_stats"].get(e["code"])
+            if emp_actual:
+                agg["actual_shifts"] += emp_actual["total"]
+                for group_name, cnt in emp_actual["shifts"].items():
+                    agg["shift_counts"][group_name] += cnt
+            agg["months"].append({
+                "filename": fn,
+                "year_month": data["year_month"],
+                "total_hours": e["total_hours"],
+                "overtime_hours": e["overtime_hours"],
+            })
+
+        for group_name, cnt in stats["required_by_shift"].items():
+            merged_shift_required[group_name] += cnt
+        for group_name, cnt in stats["actual_by_shift"].items():
+            merged_shift_actual[group_name] += cnt
+
+        files_out.append({
+            "filename": fn,
+            "title": data["title"],
+            "year_month": data["year_month"],
+            "total_days": stats["total_days"],
+            "employee_count": stats["total_employees"],
+            "total_hours": stats["total_hours"],
+            "overtime_hours": stats["overtime_hours"],
+            "avg_hours": stats["avg_hours"],
+            "max_hours": stats["max_hours"],
+            "shift_actual": stats["actual_by_shift"],
+            "shift_required": stats["required_by_shift"],
+            "daily_stats": stats["daily_stats"],
+        })
+
+    # 合併後員工排行
+    ranking = sorted(merged_emps.values(), key=lambda x: x["total_hours"], reverse=True)
+    for r in ranking:
+        r["shift_counts"] = dict(r["shift_counts"])
+
+    # 合併後班別需求 vs 實際
+    shift_comparison = []
+    for group in SHIFT_GROUPS:
+        name = group["name"]
+        required = merged_shift_required[name]
+        actual = merged_shift_actual[name]
+        shift_comparison.append({
+            "name": name,
+            "label": name,
+            "time": group["time"],
+            "required": required,
+            "actual": actual,
+            "rate": round(actual / required * 100) if required else 0,
+        })
+
+    total_hours = sum(r["total_hours"] for r in ranking)
+    overtime_hours = sum(r["overtime_hours"] for r in ranking)
+
+    return jsonify({
+        "files": files_out,
+        "errors": errors,
+        "merged": {
+            "file_count": len(files_out),
+            "total_days": sum(f["total_days"] for f in files_out),
+            "employee_count": len(ranking),
+            "total_hours": total_hours,
+            "overtime_hours": overtime_hours,
+            "avg_hours": round(total_hours / len(ranking)) if ranking else 0,
+            "max_hours": max((r["total_hours"] for r in ranking), default=0),
+            "employee_ranking": ranking,
+            "shift_comparison": shift_comparison,
+        },
     })
 
 
